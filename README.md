@@ -489,3 +489,7 @@ Berdasarkan hasil evaluasi dari ketiga model yang telah diuji, dapat disimpulkan
 | XGBoost Classifier |	97.33% | 98.09% | 95.65%	| 96.85% |
 
 Dari tabel di atas, XGBoost Classifier secara konsisten menunjukkan performa tertinggi di semua metrik evaluasi utama dibandingkan dengan Decision Tree Classifier dan Random Forest Classifier.
+
+## Referensi
+- WHO. (2023). Drinking-Water. https://www.who.int/news-room/fact-sheets/detail/drinking-water
+- Misra, S., Sinha, A., & Ghosh, R. (2021). Water Quality Assessment Using Machine Learning: A Comparative Study. Journal of Environmental Informatics.
