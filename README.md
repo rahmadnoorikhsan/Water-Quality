@@ -156,8 +156,6 @@ K-Means Clustering dipilih karena beberapa keunggulan yang dimilikinya dalam men
 
 - Adaptif terhadap struktur data: dapat mengenali kelompok mayoritas yang merepresentasikan pola umum data.
 
-Setelah menerapkan K-Means Clustering untuk menangani outliers, jumlah dataset berkurang menjadi **1248** 
-
 ### EDA - Univariate Analysis
 
 #### Fitur Kategorikal
@@ -280,8 +278,66 @@ Data Preparation adalah proses menyiapkan data agar siap digunakan oleh algoritm
 
 Pada proyek ini, tahapan data preparation yang dilakukan difokuskan pada dua aspek utama:
 
+- Penanganan Missing Values
+- Penanganan Outliers
 - Standardisasi.
 - Pembagian dataset menjadi data latih dan data uji.
+
+### Penanganan Missing Values
+Pada tahap Exploratory Data Analysis (EDA) telah mengidentifikasi adanya nilai yang hilang (missing values) pada beberapa fitur dalam dataset. Keberadaan nilai yang hilang ini, jika tidak ditangani, dapat mengganggu proses analisis dan mengurangi akurasi model machine learning.
+
+#### Ringkasan Temuan EDA dan Strategi Imputasi
+Berdasarkan hasil pemeriksaan missing values pada tahap EDA, ditemukan bahwa tiga kolom memiliki data yang tidak lengkap:
+
+- Kolom pH memiliki 491 nilai kosong.
+- Kolom Sulfate memiliki 781 nilai kosong.
+- Kolom Trihalomethanes memiliki 162 nilai kosong.
+
+Analisis distribusi pada tahap EDA menunjukkan:
+
+- Kolom pH dan Sulfate memiliki pola distribusi yang cenderung simetris. Berdasarkan temuan ini, strategi yang dipilih pada EDA untuk mengisi missing values pada kedua kolom ini adalah menggunakan nilai rata-rata (Mean).
+- Kolom Trihalomethanes menunjukkan distribusi yang sedikit skewed (miring). Oleh karena itu, strategi yang ditetapkan pada EDA adalah menggunakan Median untuk mengisi nilai yang hilang, karena median lebih robust terhadap outlier.
+
+#### Implementasi Penanganan Missing Values
+Berdasarkan strategi yang telah ditentukan pada tahap EDA, langkah-langkah implementasi imputasi data yang hilang pada tahap Data Preparation adalah sebagai berikut:
+
+- Menghitung nilai mean untuk kolom `ph` dan `Sulfate` dari data yang tersedia.
+- Menghitung nilai median untuk kolom `Trihalomethanes` dari data yang tersedia.
+- Mengisi nilai yang hilang pada masing-masing kolom menggunakan nilai statistik yang relevan yang telah dihitung.
+
+```python
+# Menangani missing values menggunakan mean
+df['ph'] = df['ph'].fillna(df['ph'].mean())
+df['Sulfate'] = df['Sulfate'].fillna(df['Sulfate'].mean())
+
+# Menangani missing values menggunakan median
+df['Trihalomethanes'] = df['Trihalomethanes'].fillna(df['Trihalomethanes'].median())
+```
+
+### Penanganan Outliers
+Outlier, atau nilai-nilai ekstrim, dapat secara signifikan memengaruhi distribusi data dan kinerja model prediktif. Identifikasi dan penanganan outlier merupakan langkah penting dalam persiapan data.
+
+#### Ringkasan Temuan EDA dan Strategi Penanganan Outliers
+Analisis visual menggunakan boxplot pada setiap fitur numerik selama tahap EDA menyimpulkan bahwa seluruh fitur numerik memiliki outliers. Kehadiran outlier ini berpotensi memengaruhi analisis data dan mengganggu performa model klasifikasi.
+
+Untuk menangani permasalahan ini, pada tahap EDA telah diputuskan untuk menggunakan pendekatan berbasis K-Means Clustering sebagai metode deteksi dan penanganan outlier. Alasan pemilihan K-Means Clustering pada EDA meliputi kemampuannya dalam analisis multivariat, tidak adanya asumsi distribusi tertentu, efisiensi, skalabilitas, dan adaptabilitas terhadap struktur data.
+
+#### Implementasi Penanganan Outliers
+Mengikuti strategi yang dirumuskan pada tahap EDA, K-Means Clustering diterapkan pada tahap Data Preparation untuk mengidentifikasi dan menangani outliers. Proses ini melibatkan pengelompokan data, di mana data poin yang berada sangat jauh dari centroid cluster mana pun dianggap sebagai outlier dan kemudian dihapus dari dataset.
+
+```python
+from sklearn.cluster import KMeans
+
+# KMeansClustering - menghapus outlier
+kmeans = KMeans(n_clusters = 2, random_state=42)
+kmeans.fit(df)
+labels = kmeans.labels_
+df = df[labels == labels.max()]
+df.reset_index(inplace = True)
+df.shape
+```
+
+Setelah menerapkan K-Means Clustering untuk menangani outliers, jumlah dataset yang siap untuk tahap selanjutnya berkurang menjadi 1248 baris data.
 
 ### Standarisasi
 Standardisasi merupakan salah satu teknik transformasi fitur yang umum digunakan dalam persiapan pemodelan machine learning. Tujuan utama dari standardisasi adalah untuk mengubah skala fitur-fitur numerik sehingga memiliki properti statistik yang seragam, yaitu rata-rata (mean) mendekati 0 dan standar deviasi mendekati 1.
