@@ -276,7 +276,7 @@ Berdasarkan dari visualisasi Rata-Rata dan Distribusi Fitur Numerikal terhadap t
 
 Data Preparation adalah proses menyiapkan data agar siap digunakan oleh algoritma machine learning. Ini mencakup pembersihan data, imputasi nilai yang hilang, transformasi fitur, normalisasi, encoding data kategorikal, dan pembagian data menjadi set pelatihan dan pengujian. Tahap ini penting untuk meningkatkan kualitas dan performa model yang akan dibangun.
 
-Pada proyek ini, tahapan data preparation yang dilakukan difokuskan pada dua aspek utama:
+Pada proyek ini, tahapan data preparation yang dilakukan difokuskan pada empat aspek utama:
 
 - Penanganan Missing Values
 - Penanganan Outliers
